@@ -135,7 +135,7 @@ io.on('connect', (socket) => {
         if(!games[user.room].word.answer.localeCompare(message)){
           user.answered=1;
           user.score+=10;
-          if(user.score>20){
+          if(user.score>100){
           io.to(user.room).emit('winner',user.name);
           }
           games[user.room].users.sort(GetSortOrder("score"));
@@ -167,6 +167,9 @@ io.on('connect', (socket) => {
     const del=removeUser(user.id,user.room);
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
       io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+    }
+    if(games[user.room].users.length===0){
+      games.splice(user.room,1);
     }
   })
 });
