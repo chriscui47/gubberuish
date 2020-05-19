@@ -84,10 +84,14 @@ const removeUser = (id,room) => {
 function getUsersInRoom(room){
   var clients = io.sockets.adapter.rooms[room];
   userlist=[];
-  for(var client in clients.sockets){
-    userlist.push(getUser(client));
-  }
-  return userlist;
+  if(clients){
+        for(var client in clients.sockets){
+          userlist.push(getUser(client));
+        }
+
+        return userlist;
+      }
+      return;
   }
 
 
