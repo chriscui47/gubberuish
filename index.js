@@ -135,6 +135,9 @@ io.on('connect', (socket) => {
         if(!games[user.room].word.answer.localeCompare(message)){
           user.answered=1;
           user.score+=10;
+          if(user.score>20){
+          io.to(user.room).emit('winner',user.name);
+          }
           games[user.room].users.sort(GetSortOrder("score"));
         }
         io.to(user.room).emit('roomData', { room: user.room, users: games[user.room].users });
