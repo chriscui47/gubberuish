@@ -61,8 +61,8 @@ function timer(socket,roomname){
       games[roomname].roundEnd=0;
       games[roomname].users.map(user=>user.answered=0);
       
-      var randomnumber = Math.floor(Math.random() * (blueDeck.length-1 - 0 + 1)) + 0;
-      games[roomname].word=blueDeck[randomnumber];
+      var randomnumber = Math.floor(Math.random() * (yellowDeck.length-1 - 0 + 1)) + 0;
+      games[roomname].word=yellowDeck[randomnumber];
       //set all users back to not answered
     }
     io.to(roomname).emit('roomData', { room: roomname, users: games[roomname].users });
