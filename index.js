@@ -168,9 +168,11 @@ io.on('connect', (socket) => {
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
       io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
     }
+    /*
     if(games[user.room].users.length===0){
       games.splice(user.room,1);
     }
+    */
   })
 });
 
