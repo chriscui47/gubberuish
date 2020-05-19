@@ -30,7 +30,7 @@ function tryToStartGame(socket,roomname){
     //players in the room should be different
     games[roomname]= {
       users:userlist,
-      time:25,
+      time:20,
       roundEnd:0,
       deck:0,
       word:{question:'beer bot',answer: 'yeet',hint:'yaa'},
@@ -57,7 +57,7 @@ function timer(socket,roomname){
     }
     //answer was~! Then restart timer and the round
     if(games[roomname].roundEnd && games[roomname].time <=0){
-      games[roomname].time=25;
+      games[roomname].time=20;
       games[roomname].roundEnd=0;
       games[roomname].users.map(user=>user.answered=0);
       
@@ -138,8 +138,8 @@ io.on('connect', (socket) => {
         io.to(user.room).emit('message', { user: user.name, text: message });
         if(!games[user.room].word.answer.localeCompare(message)){
           user.answered=1;
-          user.score+=10;
-          if(user.score>100){
+          user.score+=games[user.room].time;
+          if(user.score>180){
           io.to(user.room).emit('winner',user.name);
           }
           games[user.room].users.sort(GetSortOrder("score"));
