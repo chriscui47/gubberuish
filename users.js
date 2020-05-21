@@ -62,16 +62,12 @@ const users = [];
 
 const addUser = ({ id, name, room }) => {
   name = name.trim().toLowerCase();
-  room = room.trim().toLowerCase();
-
-  const existingUser = users.find((user) => user.room === room && user.name === name);
+  room = room.trim().toUpperCase();
 
   if(!name || !room) return { error: 'Username and room are required.' };
-  if(existingUser) return { error: 'Username is taken.' };
   let answered=0;
   let score=0;
   const user = { id, name, room,answered,score };
-
   users.push(user);
 
   return { user };
@@ -80,4 +76,4 @@ const addUser = ({ id, name, room }) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-module.exports = { addUser, getUser, addRoom,rooms};
+module.exports = { addUser, getUser, addRoom,rooms,users};

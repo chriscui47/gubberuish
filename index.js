@@ -3,13 +3,21 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 
+var bodyParser = require("body-parser");
 
 const { addUser, getUser, addRoom,rooms} = require('./users');
-const { blueDeck, yellowDeck} = require('./wordlist');
+const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
+const app = express();
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 const router = require('./router');
+const {users} = require('./users');
 
-const app = express();
+
 const server = http.createServer(app);
 const io = socketio(server);
 
@@ -17,68 +25,72 @@ app.use(cors());
 app.use(router);
 games=[]
 
-function tryToStartGame(socket,roomname){
-  var clients = io.sockets.adapter.rooms[roomname];
-  userlist=[];
-  if(clients){
-  for(var client in clients.sockets){
-    userlist.push(getUser(client));
-  }
-}
-  //we are checking size of last room
-  if (!games[roomname]){
-    //players in the room should be different
-    games[roomname]= {
-      users:userlist,
-      time:20,
-      roundEnd:0,
-      deck:0,
-      word:{question:'beer bot',answer: 'yeet',hint:'yaa'},
-      roomname: roomname
-    };
-    console.log("We can start the game");
 
-    //let all the people in that room
-    io.to(roomname).emit('game', games[roomname]);
-
-  }
-
-}
-
-
-function timer(socket,roomname){
+function timer(roomname){
   setInterval(function(){ 
+    if(!games[roomname]){
+      return;
+    }
     games[roomname].time-=1;
     io.to(roomname).emit('game', games[roomname]);
     //if time is up, end the round and restart timer
     if(!games[roomname].roundEnd && games[roomname].time<=0){
       games[roomname].time=6;
       games[roomname].roundEnd=1;
+      games[roomname].roundCurrent+=1;
     }
     //answer was~! Then restart timer and the round
     if(games[roomname].roundEnd && games[roomname].time <=0){
       games[roomname].time=20;
       games[roomname].roundEnd=0;
       games[roomname].users.map(user=>user.answered=0);
-      
-      var randomnumber = Math.floor(Math.random() * (yellowDeck.length-1 - 0 + 1)) + 0;
-      games[roomname].word=yellowDeck[randomnumber];
+      if(games[roomname].roundCurrent>=games[roomname].roundTotal){
+          io.to(roomname).emit('winner',"done");
+      }
+      changeWord(roomname,games[roomname].deck)
       //set all users back to not answered
     }
-    io.to(roomname).emit('roomData', { room: roomname, users: games[roomname].users });
+    io.to(roomname).emit('roomData', { room:roomname, users: games[roomname].users,game:games[roomname] });
+
+
    },
     1000);
 
 
 }
 
-
 const removeUser = (id,room) => {
   const index=games[room].users.find(user=>user.id===id);
-  if(index !== -1) {
-  games[room].users.splice(index,1)[0];
-  return;
+
+  if(index !== -1) return games[room].users.splice(index,1)[0];
+
+}
+
+const changeWord = (room,deck) => {
+  let decktype;
+  switch(deck){
+    case 'Yellow (Pop Culture)':
+      decktype=yellowDeck;
+
+    break;
+    case 'Blue (Party)':
+      decktype=blueDeck;
+      break;
+    case 'Red (Kinky)':
+      decktype=redDeck;
+    break;
+    case 'Mix of all decks (recommended)':
+      decktype=mixDeck;
+      break;
+
   }
+  var randomnumber = Math.floor(Math.random() * (decktype.length-1 - 0 + 1)) + 0;
+  
+  if(games[room]){
+    games[room].word=decktype[randomnumber];
+    return;
+  }
+
 }
 
 function getUsersInRoom(room){
@@ -107,57 +119,93 @@ function getUsersInRoom(room){
   }    
 
 
+  
+function tryToStartGame(room,gameLength,deck,rounds){
+  /*
+  var clients = io.sockets.adapter.rooms[room];
+  userlist=[];
+  if(clients){
+  for(var client in clients.sockets){
+    userlist.push(getUser(client));
+    }
+  
+  }
+  */
+  //we are checking size of last room
+    console.log("creating lobby");
+    //players in the room should be different
+    games[room]= {
+      users:[],
+      time:gameLength,
+      roundEnd:0,
+      roundTotal:rounds,
+      roundCurrent:1,
+      deck:deck,
+      word:{question:'',answer: '',hint:''},
+      roomname: room
+    };
+    changeWord(room,deck);
+  return true;
+
+}
+
+  var foo = function(room,gameLength,deck,rounds) {
+      //try to start the game
+      rounds=parseInt(rounds);
+      gameLength=parseInt(gameLength);
+    room = room.trim().toUpperCase();
+
+      tryToStartGame(room,gameLength,deck,rounds);
+      timer(room);
+    
+  };
+  
+  app.post('/create', function(req, res) {
+  //  body= JSON.parse(req);
+    let body=(req.body);  
+    (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
+    res.send({data:true})
+    
+    // sending a response does not pause the function
+  });
+
+
+
+
+
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
+
     const { error, user } = addUser({ id: socket.id, name, room });
-
-    if(error) return callback(error);
-
+    
     socket.join(user.room);
+    if(error) return callback(error);
+    games[room].users.push(user)
+    socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+    console.log(games[room]);
 
-    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to room ${user.room}.`});
-    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
 
-      //figure out in which room this player bellongs
-      socket.join(user.room);
-      //try to start the game
-      tryToStartGame(socket,user.room);
+    callback();
+  });
 
-      if(getUsersInRoom(user.room).length===1){
-      timer(socket,user.room);
-      }
 
-      const existingUser = games[user.room].users.find((user) => user.room === room && user.name === name);
-      if(!existingUser){
-        games[user.room].users.push(user);
-      }
+  socket.on('sendMessage', (message,room, callback) => {    
+    const user=getUser(socket.id);
+    io.to(room).emit('message', { user: user.name, text: message });
+    if(!games[room].word.answer.localeCompare(message)){
+      user.answered=1;
+      user.score+=games[user.room].time;
+      games[user.room].users.sort(GetSortOrder("score"));
+    }
+    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
 
-      socket.on('sendMessage', (message, callback) => {
-        const user = getUser(socket.id);
-        
-        io.to(user.room).emit('message', { user: user.name, text: message });
-        if(!games[user.room].word.answer.localeCompare(message)){
-          user.answered=1;
-          user.score+=games[user.room].time;
-          if(user.score>180){
-          io.to(user.room).emit('winner',user.name);
-          }
-          games[user.room].users.sort(GetSortOrder("score"));
-        }
-        io.to(user.room).emit('roomData', { room: user.room, users: games[user.room].users });
+    if(games[room].users.every(user=>user.answered===1)){
 
-        if(games[user.room].users.every(user=>user.answered===1)){
-
-          games[user.room].roundEnd=1;
-          games[user.room].time=7;
-        }
-
-        callback();
-      });
-
-    io.to(user.room).emit('roomData', { room: user.room, users: games[user.room].users });
-
-  
+      games[room].roundEnd=1;
+      games[room].roundCurrent+=1;
+      games[room].time=7;
+    }
 
     callback();
   });
@@ -167,16 +215,24 @@ io.on('connect', (socket) => {
     const user=getUser(socket.id);
 
     if(user) {
-      
+          
+        
+
     const del=removeUser(user.id,user.room);
+    socket.leave('room');
+
+    if(games[user.room]){
+      if(games[user.room].users.length===0){
+        games.splice(user.room,1);
+        console.log("game deleted");
+      }
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
       io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
     }
-    /*
-    if(games[user.room].users.length===0){
-      games.splice(user.room,1);
-    }
-    */
+
+  }
+    
+    
   })
 });
 
