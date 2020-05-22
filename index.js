@@ -16,7 +16,9 @@ app.use(function(req, res, next) {
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  console.log("the origin number os:"+allowedOrigins.indexOf(origin));
+  //console.log("the origin number os:"+allowedOrigins.indexOf(origin));
+
+  res.setHeader('Access-Control-Allow-Origin', 'https://playgibberish.com/');
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
