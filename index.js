@@ -166,6 +166,14 @@ function tryToStartGame(room,gameLength,deck,rounds){
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
     res.send({data:true})
     
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
     // sending a response does not pause the function
   });
 
