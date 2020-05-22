@@ -8,6 +8,7 @@ var bodyParser = require("body-parser");
 const { addUser, getUser, addRoom,rooms} = require('./users');
 const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
 const app = express();
+app.use(cors({origin: 'http://localhost:3000'}));
 
 
 app.use(bodyParser.json());
@@ -21,7 +22,6 @@ const {users} = require('./users');
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(cors());
 app.use(router);
 games=[]
 
@@ -165,15 +165,6 @@ function tryToStartGame(room,gameLength,deck,rounds){
     let body=(req.body);  
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
     res.send({data:true})
-    
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
     // sending a response does not pause the function
   });
 
@@ -190,7 +181,6 @@ io.on('connect', (socket) => {
     if(error) return callback(error);
     games[room].users.push(user)
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
-    console.log(games[room]);
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
 
