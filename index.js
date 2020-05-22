@@ -16,6 +16,8 @@ app.use(function(req, res, next) {
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
+  console.log(origin);
+
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', true);
@@ -184,7 +186,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
-
+console.log(origin);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', true);
