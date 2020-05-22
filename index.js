@@ -186,7 +186,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   }
 console.log(origin);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
     let body=(req.body);  
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
