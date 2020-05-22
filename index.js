@@ -36,7 +36,7 @@ const server = http.createServer(app);
 
 
 var io = require('socket.io')(server, { origins: '*:*'});
-
+io.origins('*:*')
 
 
 
