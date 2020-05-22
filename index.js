@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 app.options('*', cors());
-
+/*
 app.use(function(req, res, next) {
   var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby'];
   var origin = req.headers.origin;
@@ -26,6 +26,7 @@ app.use(function(req, res, next) {
 
   return next();
 });
+*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
