@@ -16,6 +16,7 @@ app.use(function(req, res, next) {
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
+  console.log(origin);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
