@@ -8,8 +8,8 @@ var bodyParser = require("body-parser");
 const { addUser, getUser, addRoom,rooms} = require('./users');
 const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
 const app = express();
-app.use(cors({origin: '*'}));
-
+app.use(cors());
+app.use(express.static(path.join(__dirname, '../')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -162,6 +162,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   
   app.post('/create', function(req, res) {
   //  body= JSON.parse(req);
+  res.writeHead(200, {'Content-Type': 'text/plain'});
     let body=(req.body);  
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
     res.send({data:true})
