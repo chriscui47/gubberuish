@@ -9,7 +9,7 @@ const { addUser, getUser, addRoom,rooms} = require('./users');
 const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
 const app = express();
 
-/*
+
 app.use(function(req, res, next) {
   var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/'];
   var origin = req.headers.origin;
@@ -21,8 +21,8 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Credentials', true);
 
   return next();
-});*/
-app.use(cors());
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
