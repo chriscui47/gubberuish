@@ -37,8 +37,6 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 
-
-
 app.use(router);
 games=[]
 
