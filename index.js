@@ -8,6 +8,10 @@ var bodyParser = require("body-parser");
 const { addUser, getUser, addRoom,rooms} = require('./users');
 const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
 const app = express();
+app.use(cors());
+
+app.options('*', cors());
+
 app.use(function(req, res, next) {
   var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby'];
   var origin = req.headers.origin;
