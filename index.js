@@ -185,7 +185,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
-console.log(origin);
+console.log("the origin is:"+origin);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
