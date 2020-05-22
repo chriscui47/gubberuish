@@ -16,9 +16,8 @@ app.use(function(req, res, next) {
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
 
   return next();
@@ -33,6 +32,7 @@ const {users} = require('./users');
 
 
 const server = http.createServer(app);
+//const io = socketio(server);
 
 const io = socketio(server);
 
