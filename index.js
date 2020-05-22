@@ -180,16 +180,6 @@ function tryToStartGame(room,gameLength,deck,rounds){
   app.post('/create', function(req, res) {
   //  body= JSON.parse(req);
 
-
-  var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/'];
-  var origin = req.headers.origin;
-  if(allowedOrigins.indexOf(origin) > -1){
-       res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-console.log(origin);
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
     let body=(req.body);  
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
     res.send({data:true});
