@@ -17,6 +17,9 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Allow-Credentials', true);
+
+
+
   return next();
 });
 
@@ -29,7 +32,13 @@ const {users} = require('./users');
 
 
 const server = http.createServer(app);
-const io = socketio(server);
+//const io = socketio(server);
+
+
+var io = require('socket.io')(server, { origins: '*:*'});
+
+
+
 
 app.use(router);
 games=[]
