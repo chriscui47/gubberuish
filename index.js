@@ -249,7 +249,7 @@ io.on('connect', (socket) => {
     const user=getUser(socket.id);
 
     if(user) {
-          
+          console.log("deleteing user");
         
 
     const del=removeUser(user.id,user.room);
