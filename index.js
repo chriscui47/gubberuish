@@ -80,6 +80,10 @@ function timer(roomname){
 const removeUser = (id,room) => {
   const index=games[room].users.find(user=>user.id===id);
 
+  const index2=users.find((user) => user.room === room && user.name === name);
+
+  if(index2 !== -1) users.splice(index2,1)[0];
+
   if(index !== -1) return games[room].users.splice(index,1)[0];
 
 }
