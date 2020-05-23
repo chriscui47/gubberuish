@@ -242,6 +242,12 @@ io.on('connect', (socket) => {
   });
 
 
+  socket.on('playAgain', (room) => {    
+
+    gamse[room]
+    callback();
+  });
+
   socket.on('disconnect', () => {
     const user=getUser(socket.id);
 
