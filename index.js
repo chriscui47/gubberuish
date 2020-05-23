@@ -58,7 +58,7 @@ function timer(roomname){
     }
     //answer was~! Then restart timer and the round
     if(games[roomname].roundEnd && games[roomname].time <=0){
-      games[roomname].time=game[roomname].maxTime;
+      games[roomname].time=games[roomname].maxTime;
       games[roomname].roundEnd=0;
       games[roomname].roundCurrent+=1;
       games[roomname].users.map(user=>user.answered=0);
@@ -196,8 +196,6 @@ console.log("the origin is:"+origin);
     (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
     res.send({data:true});
 
-
-    return next();
     // sending a response does not pause the function
   });
 
