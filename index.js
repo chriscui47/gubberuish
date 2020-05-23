@@ -55,12 +55,12 @@ function timer(roomname){
     if(!games[roomname].roundEnd && games[roomname].time<=0){
       games[roomname].time=6;
       games[roomname].roundEnd=1;
-      games[roomname].roundCurrent+=1;
     }
     //answer was~! Then restart timer and the round
     if(games[roomname].roundEnd && games[roomname].time <=0){
-      games[roomname].time=20;
+      games[roomname].time=game[roomname].maxTime;
       games[roomname].roundEnd=0;
+      games[roomname].roundCurrent+=1;
       games[roomname].users.map(user=>user.answered=0);
       if(games[roomname].roundCurrent>=games[roomname].roundTotal){
           io.to(roomname).emit('winner',"done");
@@ -155,6 +155,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
     games[room]= {
       users:[],
       time:gameLength,
+      maxTime:gameLength,
       roundEnd:0,
       roundTotal:rounds,
       roundCurrent:1,
