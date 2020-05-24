@@ -49,8 +49,13 @@ function timer(roomname){
     if(!games[roomname]){
       return;
     }
+
+    //only update t ime if game is not over
+    if(games[roomname].roundCurrent<=games[roomname].roundTotal){
     games[roomname].time-=1;
+    }
     io.to(roomname).emit('game', games[roomname]);
+
     //if time is up, end the round and restart timer
     if(!games[roomname].roundEnd && games[roomname].time<=0){
       games[roomname].time=6;
@@ -64,6 +69,7 @@ function timer(roomname){
       games[roomname].users.map(user=>user.answered=0);
       if(games[roomname].roundCurrent>=games[roomname].roundTotal){
           io.to(roomname).emit('winner',"done");
+
       }
       changeWord(roomname,games[roomname].deck)
       //set all users back to not answered
@@ -78,13 +84,33 @@ function timer(roomname){
 }
 
 const removeUser = (id,room) => {
-  const index=games[room].users.find(user=>user.id===id);
 
-  const index2=users.find((user) => user.room === room && user.name === name);
+  
+ try {
+  const index=games[room].users.findIndex(user=>user.id===id);
 
-  if(index2 !== -1) users.splice(index2,1)[0];
+  if(index !== -1) {
+    console.log("deleteing user"+getUser(id).name);
 
-  if(index !== -1) return games[room].users.splice(index,1)[0];
+    games[room].users.splice(index,1)[0];
+
+  }
+  } catch (e) {
+          console.error(e.name + ': ' + e.message)
+          return;
+    }
+  
+  try {
+    const index2=users.findIndex((user) => user.room === room && user.id === id);
+    if(index2 !== -1) {
+      console.log("deleteing user"+getUser(id).name);
+
+      users.splice(index2,1)[0];
+    }
+} catch (e) {
+            console.error(e.name + ': ' + e.message)
+            return;
+      }
 
 }
 
@@ -211,10 +237,15 @@ io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
 
     const { error, user } = addUser({ id: socket.id, name, room });
-    
-    socket.join(user.room);
     if(error) return callback(error);
-    games[room].users.push(user)
+
+    socket.join(user.room);
+    if(games[room]){
+    games[room].users.push(user);
+    }
+    else{
+      return callback(error); 
+    }
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
@@ -225,7 +256,15 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message,room, callback) => {    
     const user=getUser(socket.id);
+    if(!games[room]){
+      return;
+    }
+    try{
     io.to(room).emit('message', { user: user.name, text: message });
+    }
+    catch(e){
+      console.log(e);
+    }
     if(!games[room].word.answer.localeCompare(message)){
       user.answered=1;
       user.score+=games[user.room].time;
@@ -253,16 +292,16 @@ io.on('connect', (socket) => {
     const user=getUser(socket.id);
 
     if(user) {
-          console.log("deleteing");
         
-
+      
     const del=removeUser(user.id,user.room);
+
     socket.leave('room');
 
     if(games[user.room]){
       if(games[user.room].users.length===0){
-        games.splice(user.room,1);
-        console.log("game deleted");
+        delete games[user.room];
+        console.log(games);
       }
       io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
       io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
