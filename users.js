@@ -64,11 +64,12 @@ const addUser = ({ id, name, room }) => {
   name = name.trim().toLowerCase();
   room = room.trim().toUpperCase();
   const existingUser = users.find((user) => user.room === room && user.name === name);
-  if(existingUser) return { error: 'Username is taken.' };
+  //if(existingUser) return { error: 'Username is taken.' };
 
   if(!name || !room) return { error: 'Username and room are required.' };
   let answered=0;
   let score=0;
+  let host=0;
   const user = { id, name, room,answered,score };
   users.push(user);
 

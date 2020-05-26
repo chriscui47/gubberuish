@@ -45,16 +45,17 @@ games=[]
 
 
 function timer(roomname){
-  setInterval(function(){ 
+  var timerset= setInterval(function(){ 
     if(!games[roomname]){
       return;
     }
 
     //only update t ime if game is not over
-    if(games[roomname].roundCurrent<=games[roomname].roundTotal){
-    games[roomname].time-=1;
+    if(games[roomname].roundCurrent>=games[roomname].roundTotal){
+      clearInterval(timerset);
     }
-    io.to(roomname).emit('game', games[roomname]);
+    games[roomname].time-=1;
+    
 
     //if time is up, end the round and restart timer
     if(!games[roomname].roundEnd && games[roomname].time<=0){
@@ -69,7 +70,6 @@ function timer(roomname){
       games[roomname].users.map(user=>user.answered=0);
       if(games[roomname].roundCurrent>=games[roomname].roundTotal){
           io.to(roomname).emit('winner',"done");
-
       }
       changeWord(roomname,games[roomname].deck)
       //set all users back to not answered
@@ -91,8 +91,9 @@ const removeUser = (id,room) => {
 
   if(index !== -1) {
     console.log("deleteing user"+getUser(id).name);
-
-    games[room].users.splice(index,1)[0];
+    games[room].users.splice(index,1);
+    io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
+    console.log(games);
 
   }
   } catch (e) {
@@ -104,8 +105,10 @@ const removeUser = (id,room) => {
     const index2=users.findIndex((user) => user.room === room && user.id === id);
     if(index2 !== -1) {
       console.log("deleteing user"+getUser(id).name);
+      users.splice(index2,1);    
+      io.to(room).emit('roomData', { users: games[room].users,game:games[room] });
+      console.log(games);
 
-      users.splice(index2,1)[0];
     }
 } catch (e) {
             console.error(e.name + ': ' + e.message)
@@ -186,7 +189,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
       users:[],
       time:gameLength,
       maxTime:gameLength,
-      roundEnd:0,
+      roundEnd:-1,
       roundTotal:rounds,
       roundCurrent:1,
       deck:deck,
@@ -203,9 +206,10 @@ function tryToStartGame(room,gameLength,deck,rounds){
       rounds=parseInt(rounds);
       gameLength=parseInt(gameLength);
     room = room.trim().toUpperCase();
-
+    if(!games[room]){
       tryToStartGame(room,gameLength,deck,rounds);
-      timer(room);
+    }
+      
     
   };
   
@@ -235,10 +239,15 @@ console.log("the origin is:"+origin);
 
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
-
     const { error, user } = addUser({ id: socket.id, name, room });
     if(error) return callback(error);
-
+    console.log(users);
+    //if its first user in lobby, make him HOST!
+    if(games[room]){
+          if(games[room].users.length===0){
+            user.host=1;
+          }
+    }
     socket.join(user.room);
     if(games[room]){
     games[room].users.push(user);
@@ -248,7 +257,7 @@ io.on('connect', (socket) => {
     }
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
-    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
+    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room],user:user });
 
     callback();
   });
@@ -284,27 +293,45 @@ io.on('connect', (socket) => {
 
 
   socket.on('playAgain', (room) => {    
-    console.log("sdf");
-    callback();
+    try{
+    games[room].time=games[room].maxTime;
+    games[room].roundCurrent=1;
+    games[room].roundEnd=0;
+    timer(room);
+    io.to(room).emit('roomData', { room: room, users: games[room].users,game:games[room] });
+    io.to(room).emit('restart',"yeet");
+
+    }catch(e){
+      console.log(e);
+    }
+
   });
+
+  socket.on('startGame', (room) => {   
+    timer(room);
+    games[room].roundEnd=0;
+  });
+
+
 
   socket.on('disconnect', () => {
     const user=getUser(socket.id);
-
     if(user) {
-        
-      
-    const del=removeUser(user.id,user.room);
+      const room1=user.room;
 
-    socket.leave('room');
+   //   setTimeout(function () {
+        const del=removeUser(user.id,user.room);
+     // }, 3500);
+
+    socket.leave(user.room);
+
+    io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+    io.to(user.room).emit('roomData', { room: room1, users: getUsersInRoom(room1),game:games[room1]});
 
     if(games[user.room]){
       if(games[user.room].users.length===0){
         delete games[user.room];
-        console.log(games);
       }
-      io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
     }
 
   }
