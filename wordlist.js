@@ -110,7 +110,6 @@ const yellowDeck=[
     {question:"razzled ding pitch vase",answer:"resting bitch face",hint:"lingering facial rage"},
     {question:"plaid for men eye nan tree quoters",answer:"platform 9 3/4",hint:"brick column"},
     {question:"fifed holler food lawn",answer:"5-dollar footlong",hint:"eat fresh"},
-    {question:"pig bull",answer:"big baller brand",hint:"lonzo"},
     {question:"hints tug rams hole leper hid tea",answer:"instagram celebrity",hint:"internet famous"},
     {question:"dez pus seed hoe",answer:"despacito",hint:"taquito, dorito"},
     {question:"ham a sauna let’s uh",answer:"amazon alexa",hint:"robot commands"},

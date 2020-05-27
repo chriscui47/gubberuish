@@ -236,7 +236,7 @@ console.log("the origin is:"+origin);
 function getKey(player){
   return player.id;
 }
-  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:4,maxMatchSize:8 });
+  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:3,maxMatchSize:8 });
 
   function makeid(length){
     var result           = '';
@@ -306,26 +306,30 @@ io.on('connect', (socket) => {
 
   
 
-  socket.on('sendMessage', (message,room, callback) => {    
+  socket.on('sendMessage', (message,room, roundEnd,name,callback) => {    
     const user=getUser(socket.id);
     if(!games[room]){
       return;
     }
     try{
+      if(!(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim())){
     io.to(room).emit('message', { user: user.name, text: message });
+      }
+
     }
     catch(e){
       console.log(e);
     }
-    if(!games[room].word.answer.localeCompare(message)){
+    if(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim() && games[room].roundEnd==0){
+      io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!` });
+
       user.answered=1;
       user.score+=games[user.room].time;
       games[user.room].users.sort(GetSortOrder("score"));
     }
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
 
-    if(games[room].users.every(user=>user.answered===1)){
-
+    if(games[room].users.every(user=>user.answered===1) && roundEnd==0){
       games[room].roundEnd=1;
       games[room].roundCurrent+=1;
       games[room].time=7;
