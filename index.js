@@ -183,7 +183,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   }
   */
   //we are checking size of last room
-    console.log("creating lobby");
+    console.log("creating lobby!");
     //players in the room should be different
     games[room]= {
       users:[],
