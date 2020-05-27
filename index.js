@@ -2,10 +2,10 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
-
+const { FifoMatchmaker } = require('matchmaking');
 var bodyParser = require("body-parser");
 
-const { addUser, getUser, addRoom,rooms} = require('./users');
+const { addUser, getUser, addRoom,rooms,addUser2} = require('./users');
 const { blueDeck, yellowDeck,redDeck,mixDeck} = require('./wordlist');
 const app = express();
 
@@ -200,7 +200,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   return true;
 
 }
-
+//foo creates game
   var foo = function(room,gameLength,deck,rounds) {
       //try to start the game
       rounds=parseInt(rounds);
@@ -233,6 +233,40 @@ console.log("the origin is:"+origin);
     // sending a response does not pause the function
   });
 
+function getKey(player){
+  return player.id;
+}
+  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:4,maxMatchSize:8 });
+
+  function makeid(length){
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+
+  function runGame(players) {
+    const roomname = makeid(5);
+    console.log("Game started with:"+players);
+    foo(roomname,25,"Mix of all decks (recommended)",18);
+    //once game starts, put players into match
+    players.map(player=>
+      {  
+        games[roomname].users.push(player);
+        player.socket.join(roomname);
+        delete player["socket"];
+        mm.leaveQueue(player);
+        player["room"]=roomname;
+      }
+    );
+
+  //  console.log(getUsersInRoom(roomname));
+    io.to(roomname).emit('roomData', { room: roomname, users: games[roomname].users,game:games[roomname] });
+    io.to(roomname).emit('matchFound');
+  }
 
 
 
@@ -257,11 +291,20 @@ io.on('connect', (socket) => {
     }
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
-    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room],user:user });
+    io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
 
     callback();
   });
 
+  socket.on('joinMM', ({ name }, callback) => {
+    const { error, user } = addUser2({ id: socket.id, name, socket });
+    if(error) return callback(error);
+    //if its first user in lobby, make him HOST!
+    mm.push(user);
+    
+  });
+
+  
 
   socket.on('sendMessage', (message,room, callback) => {    
     const user=getUser(socket.id);

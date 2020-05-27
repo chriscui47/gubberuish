@@ -76,7 +76,23 @@ const addUser = ({ id, name, room }) => {
   return { user };
 }
 
+const addUser2 = ({ id, name,socket }) => {
+  name = name.trim().toLowerCase();
+  //const existingUser = users.find((user) => user.room === room && user.name === name);
+  //if(existingUser) return { error: 'Username is taken.' };
+
+  if(!name) return { error: 'Username required.' };
+  let answered=0;
+  let score=0;
+  let host=1;
+  let room='';
+  const user = { id,room,name,answered,score,socket };
+  users.push(user);
+
+  return { user };
+}
+
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-module.exports = { addUser, getUser, addRoom,rooms,users};
+module.exports = { addUser, getUser, addRoom,rooms,users,addUser2};
