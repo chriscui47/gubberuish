@@ -103,7 +103,7 @@ const removeUser = (id,room) => {
 
   }
   } catch (e) {
-          console.error(e.name + ': ' + e.message)
+         console.log("couldnt delete from game users list")
           return;
     }
   
@@ -117,8 +117,8 @@ const removeUser = (id,room) => {
 
     }
 } catch (e) {
-            console.error(e.name + ': ' + e.message)
-            return;
+      console.log("couldnt delete from all users list")
+      return;
       }
 
 }
@@ -266,6 +266,7 @@ function getKey(player){
         delete player["socket"];
         mm.leaveQueue(player);
         player["room"]=roomname;
+        console.log(JSON.stringify(player));
       }
     );
 
@@ -281,7 +282,6 @@ io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if(error) return callback(error);
-    console.log(users);
     //if its first user in lobby, make him HOST!
     if(games[room]){
           if(games[room].users.length===0){
@@ -368,29 +368,43 @@ io.on('connect', (socket) => {
 
 
   socket.on('disconnect', () => {
-    const user=getUser(socket.id);
-    if(user) {
-      const room1=user.room;
+    var room;
+    try{
+      const user=getUser(socket.id); 
+      room=user.room;
+        if(user) {
+          mm.leaveQueue(user);
 
-   //   setTimeout(function () {
-        const del=removeUser(user.id,user.room);
-     // }, 3500);
+      //   setTimeout(function () {
+          const del=removeUser(user.id,room);
+        // }, 3500);
 
-    socket.leave(user.room);
-
-    io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
-    io.to(user.room).emit('roomData', { room: room1, users: getUsersInRoom(room1),game:games[room1]});
-
-    if(games[user.room]){
-      if(games[user.room].users.length===0){
-        delete games[user.room];
+        socket.leave(room);
+        console.log("mm queeu is"+JSON.stringify(mm.queue));
+        console.log("users list are"+JSON.stringify(users));
+        io.to(room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
+        io.to(room).emit('roomData', { room: room, users: getUsersInRoom(room),game:games[room]});
+        }
+      }
+    catch(e){
+      console.log("couldnt get user");
+    }
+try{
+    if(games[room]){
+      if(games[room].users.length===0){
+        delete games[room];
+        console.log("Deleting game room! Games are:"+JSON.stringify(games));
+        
       }
     }
-
   }
-    
-    
-  })
+  catch(e){
+    console.log("coudlnt delete game");
+    console.log(e.message);
+  } 
+}
+  
+  )
 });
 
 server.listen(process.env.PORT || 5000, () => 
