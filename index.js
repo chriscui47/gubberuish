@@ -1,6 +1,10 @@
 const http = require('http');
 
-require('newrelic');
+const wakeUpDyno = require("wokeDyno.js"); // my module!
+
+
+const DYNO_URL = "https://gibb47.herokuapp.com/"; // the url of your dyno
+
 const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
@@ -389,5 +393,11 @@ io.on('connect', (socket) => {
   })
 });
 
-server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
+server.listen(process.env.PORT || 5000, () => 
+
+wakeUpDyno(DYNO_URL) // will start once server starts
+
+);
+
+
 module.exports=games;
