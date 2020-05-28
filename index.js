@@ -1,6 +1,6 @@
 const http = require('http');
 
-const wakeUpDyno = require("wokeDyno.js"); // my module!
+const wakeUpDyno = require("./wokeDyno.js"); // my module!
 
 
 const DYNO_URL = "https://gibb47.herokuapp.com/"; // the url of your dyno
