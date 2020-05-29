@@ -222,21 +222,25 @@ function tryToStartGame(room,gameLength,deck,rounds){
   app.post('/create', function(req, res) {
   //  body= JSON.parse(req);
 
+try{
+      var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/'];
+      var origin = req.headers.origin;
+      if(allowedOrigins.indexOf(origin) > -1){
+          res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+    console.log("the origin is:"+origin);
+      res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
+      res.header('Access-Control-Allow-Credentials', true);
+        let body=(req.body);  
+        (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
+        res.send({data:true});
+}
+catch(e){
+    console.log(e.message);
+}
 
-  var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/'];
-  var origin = req.headers.origin;
-  if(allowedOrigins.indexOf(origin) > -1){
-       res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-console.log("the origin is:"+origin);
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
-  res.header('Access-Control-Allow-Credentials', true);
-    let body=(req.body);  
-    (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
-    res.send({data:true});
 
-    // sending a response does not pause the function
   });
 
 function getKey(player){
@@ -283,12 +287,17 @@ io.on('connect', (socket) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
-    if(games[room]){
-          if(games[room].users.length===0){
-            user.host=1;
-          }
-    }
-    socket.join(user.room);
+    try{
+        if(games[room]){
+              if(games[room].users.length===0){
+                user.host=1;
+              }
+        }
+        socket.join(user.room);
+
+    }catch(e){
+        console.log(e.message);
+      }
     try{
     games[room].users.push(user);
     
@@ -303,10 +312,15 @@ io.on('connect', (socket) => {
   });
 
   socket.on('joinMM', ({ name }, callback) => {
+    try{
     const { error, user } = addUser2({ id: socket.id, name, socket });
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     mm.push(user);
+    }
+    catch(e){
+      console.log(e.message);
+    }
     
   });
 
@@ -362,8 +376,14 @@ io.on('connect', (socket) => {
   });
 
   socket.on('startGame', (room) => {   
+    try{
     timer(room);
     games[room].roundEnd=0;
+
+    }
+    catch(e){
+      console.log(e.message);
+    }
   });
 
 
