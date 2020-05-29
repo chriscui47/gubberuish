@@ -14,7 +14,6 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "matchmaking": "^0.4.32",
-    "newrelic": "^6.8.0",
     "node-fetch": "^2.6.0",
     "prerender-node": "^3.2.5",
     "socket.io": "^2.2.0"

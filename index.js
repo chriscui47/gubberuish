@@ -3,7 +3,7 @@ const http = require('http');
 const wakeUpDyno = require("./wokeDyno.js"); // my module!
 
 
-const DYNO_URL = "https://gibb47.herokuapp.com/"; // the url of your dyno
+const DYNO_URL = "http://gibb47.herokuapp.com/"; // the url of your dyno
 
 const express = require('express');
 const socketio = require('socket.io');
@@ -65,7 +65,7 @@ function timer(roomname){
 
     //if time is up, end the round and restart timer
     if(!games[roomname].roundEnd && games[roomname].time<=0){
-      games[roomname].time=6;
+      games[roomname].time=9;
       games[roomname].roundEnd=1;
     }
     //answer was~! Then restart timer and the round
@@ -96,7 +96,7 @@ const removeUser = (id,room) => {
   const index=games[room].users.findIndex(user=>user.id===id);
 
   if(index !== -1) {
-    console.log("deleteing user"+getUser(id).name);
+    console.log("deleteing user in game lobby"+getUser(id).name);
     games[room].users.splice(index,1);
     io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
     console.log(games);
@@ -110,7 +110,7 @@ const removeUser = (id,room) => {
   try {
     const index2=users.findIndex((user) => user.room === room && user.id === id);
     if(index2 !== -1) {
-      console.log("deleteing user"+getUser(id).name);
+      console.log("deleteing user in user list"+getUser(id).name);
       users.splice(index2,1);    
       io.to(room).emit('roomData', { users: games[room].users,game:games[room] });
       console.log(games);
@@ -326,7 +326,8 @@ io.on('connect', (socket) => {
     catch(e){
       console.log(e);
     }
-    if(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim() && games[room].roundEnd==0){
+
+    if(games[room].word.answer.toUpperCase().trim() === message.replace("'","").toUpperCase().trim() && games[room].roundEnd==0){
       io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!` });
 
       user.answered=1;
