@@ -95,7 +95,7 @@ const removeUser = (id,room) => {
   const index=games[room].users.findIndex(user=>user.id===id);
 
   if(index !== -1) {
-    console.log("deleteing user in game lobby"+getUser(id).name);
+    console.log("deleteing user "+getUser(id).name+" from game lobby");
     games[room].users.splice(index,1);
     io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
     console.log("current games are  "+games);
