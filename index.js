@@ -22,7 +22,6 @@ app.use(function(req, res, next) {
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  //console.log("the origin number os:"+allowedOrigins.indexOf(origin));
 
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS,POST');
@@ -99,7 +98,7 @@ const removeUser = (id,room) => {
     console.log("deleteing user in game lobby"+getUser(id).name);
     games[room].users.splice(index,1);
     io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
-    console.log(games);
+    console.log("current games are  "+games);
 
   }
   } catch (e) {
@@ -113,7 +112,7 @@ const removeUser = (id,room) => {
       console.log("deleteing user in user list"+getUser(id).name);
       users.splice(index2,1);    
       io.to(room).emit('roomData', { users: games[room].users,game:games[room] });
-      console.log(games);
+      console.log("current games are  "+games);
 
     }
 } catch (e) {
@@ -332,7 +331,7 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message,room, roundEnd,name,callback) => {    
     const user=getUser(socket.id);
-    console.log(JSON.stringify(games));
+    console.log("current games are  "+games);
 
     if(!games[room]){
       return;
