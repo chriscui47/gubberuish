@@ -286,7 +286,6 @@ function getKey(player){
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
-    console.log(JSON.stringify(games));
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     try{
@@ -333,6 +332,8 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message,room, roundEnd,name,callback) => {    
     const user=getUser(socket.id);
+    console.log(JSON.stringify(games));
+
     if(!games[room]){
       return;
     }
