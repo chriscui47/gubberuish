@@ -291,12 +291,13 @@ io.on('connect', (socket) => {
     socket.join(user.room);
     try{
     games[room].users.push(user);
-    }catch(e){
-      console.log(e.message);
-    }
+    
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
+    }catch(e){
+      console.log(e.message);
+    }
 
     callback();
   });
