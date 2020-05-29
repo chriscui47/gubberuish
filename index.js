@@ -208,7 +208,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
 }
 //foo creates game
   var foo = function(room,gameLength,deck,rounds) {
-      //try to start the game
+      //try to start the gamefv
       rounds=parseInt(rounds);
       gameLength=parseInt(gameLength);
     room = room.trim().toUpperCase();
@@ -286,6 +286,7 @@ function getKey(player){
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
+    console.log(JSON.stringify(games));
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     try{
@@ -373,7 +374,7 @@ io.on('connect', (socket) => {
         games[room].users[i].score=0;
     }
 
-    
+
 
 
     timer(room);
