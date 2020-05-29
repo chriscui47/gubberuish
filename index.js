@@ -243,6 +243,7 @@ catch(e){
 
   });
 
+
 function getKey(player){
   return player.id;
 }
@@ -368,6 +369,13 @@ io.on('connect', (socket) => {
     games[room].time=games[room].maxTime;
     games[room].roundCurrent=1;
     games[room].roundEnd=0;
+    for(let i=0;i<games[room].users.length;i++){
+        games[room].users[i].score=0;
+    }
+
+    
+
+
     timer(room);
     io.to(room).emit('roomData', { room: room, users: games[room].users,game:games[room] });
     io.to(room).emit('restart',"yeet");
