@@ -77,8 +77,8 @@ const blueDeck=[
     ];
     const yellowDeck=[
     
-        {question:"fit he sheds off cray",answer:"fifty shades of grey",hint:"whips and chain"},  {question:"core run teen",answer:"quarantine",hint:"’rona"},
-     {question:"cuh rone ahvi rust",answer:"corona virus",hint:"’rona"},
+        {question:"fit he sheds off cray",answer:"fifty shades of grey",hint:"whips and chain"},  {question:"core run teen",answer:"quarantine",hint:"'rona"},
+     {question:"cuh rone ahvi rust",answer:"corona virus",hint:"'rona"},
      {question:"suhw ayp reyt",answer:"swipe right",hint:"’she/hes hottt"},
         {question:"fog chair he",answer:"fuckjerry",hint:"meme account"},
         {question:"guy leech hen her",answer:"kylie jenner",hint:"makeup"},

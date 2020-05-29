@@ -289,11 +289,10 @@ io.on('connect', (socket) => {
           }
     }
     socket.join(user.room);
-    if(games[room]){
+    try{
     games[room].users.push(user);
-    }
-    else{
-      return callback(error); 
+    }catch(e){
+      console.log(e.message);
     }
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
@@ -327,7 +326,7 @@ io.on('connect', (socket) => {
       console.log(e);
     }
 
-    if(games[room].word.answer.toUpperCase().trim() === message.replace("'","").toUpperCase().trim() && games[room].roundEnd==0){
+    if(games[room].word.answer.toUpperCase().trim() === message.replace(/'/g, '').toUpperCase().trim() && games[room].roundEnd==0){
       io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!` });
 
       user.answered=1;
