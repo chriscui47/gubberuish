@@ -66,7 +66,7 @@ const addUser = ({ id, name, room }) => {
   const existingUser = users.find((user) => user.room === room && user.name === name);
   //if(existingUser) return { error: 'Username is taken.' };
 
-  if(!name || !room) return { error: 'Username and room are required.' };
+  if(!name) return { error: 'Username required.' };
   let answered=0;
   let score=0;
   let host=0;
