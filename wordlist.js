@@ -1,5 +1,5 @@
 const blueDeck=[
-    /*
+    
     {question:"stirrup oak her",answer:"strip poker",hint:"naked games"},
     {question:"bud dish hots",answer:"body shots",hint:"belly button"},
     {question:"parr grr all",answer:"bar crawl",hint:"on to the next"},
@@ -72,7 +72,7 @@ const blueDeck=[
     {question:"trunk eggs stink",answer:"drunk texting",hint:"idk where i am"},
     {question:"seep peed he wile",answer:"cbd oil",hint:"for anxiety"},
     {question:"past hutch owe ain’t",answer:"pass the joint",hint:"split the pot"},
-    */
+    
     {question:"shod gone ink appear",answer:"shotgunning a beer",hint:"quick drink"}
     ];
     const yellowDeck=[

@@ -318,7 +318,7 @@ io.on('connect', (socket) => {
     }
     try{
       if(!(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim())){
-    io.to(room).emit('message', { user: user.name, text: message });
+    io.to(room).emit('message', { user: user.name, text: message,answer:false });
       }
 
     }
@@ -327,7 +327,7 @@ io.on('connect', (socket) => {
     }
 
     if(games[room].word.answer.toUpperCase().trim() === message.replace(/'/g, '').toUpperCase().trim() && games[room].roundEnd==0){
-      io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!` });
+      io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!`,answer:true });
 
       user.answered=1;
       user.score+=games[user.room].time;
