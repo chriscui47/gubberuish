@@ -296,8 +296,10 @@ io.on('connect', (socket) => {
         socket.join(user.room);
 
     }catch(e){
+        return callback("Room doesnt exist");
         console.log(e.message);
-      }
+
+    }
     try{
     games[room].users.push(user);
     
@@ -305,6 +307,7 @@ io.on('connect', (socket) => {
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
     }catch(e){
+      return callback("Room doesnt exist");
       console.log(e.message);
     }
 
