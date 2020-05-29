@@ -99,6 +99,8 @@ const removeUser = (id,room) => {
     games[room].users.splice(index,1);
     io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
     console.log("current games are  "+games);
+    console.log(games);
+
 
   }
   } catch (e) {
@@ -426,8 +428,9 @@ try{
     if(games[room]){
       if(games[room].users.length===0){
         delete games[room];
-        console.log("Deleting game room! Games are:"+JSON.stringify(games));
+        console.log("Deleting game room! Games are:");
         
+        console.log(games);
       }
     }
   }
