@@ -56,9 +56,6 @@ function timer(roomname){
     }
 
     //only update t ime if game is not over
-    if(games[roomname].roundCurrent>=games[roomname].roundTotal){
-      clearInterval(timerset);
-    }
     games[roomname].time-=1;
     
 
@@ -73,8 +70,9 @@ function timer(roomname){
       games[roomname].roundEnd=0;
       games[roomname].roundCurrent+=1;
       games[roomname].users.map(user=>user.answered=0);
-      if(games[roomname].roundCurrent>=games[roomname].roundTotal){
+      if(games[roomname].roundCurrent>games[roomname].roundTotal){
           io.to(roomname).emit('winner',"done");
+          clearInterval(timerset);
       }
       changeWord(roomname,games[roomname].deck)
       //set all users back to not answered
@@ -359,7 +357,6 @@ io.on('connect', (socket) => {
 
     if(games[room].users.every(user=>user.answered===1) && roundEnd==0){
       games[room].roundEnd=1;
-      games[room].roundCurrent+=1;
       games[room].time=7;
     }
 
