@@ -416,7 +416,8 @@ io.on('connect', (socket) => {
 
         socket.leave(room);
         console.log("mm queeu is"+JSON.stringify(mm.queue));
-        console.log("users list are"+JSON.stringify(users));
+        console.log("users list are ");
+        console.log(JSON.stringify(users));
         io.to(room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
         io.to(room).emit('roomData', { room: room, users: getUsersInRoom(room),game:games[room]});
         }
@@ -429,7 +430,6 @@ try{
       if(games[room].users.length===0){
         delete games[room];
         console.log("Deleting game room! Games are:");
-        
         console.log(games);
       }
     }
