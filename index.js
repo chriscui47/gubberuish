@@ -246,7 +246,7 @@ catch(e){
 function getKey(player){
   return player.id;
 }
-  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:2,maxMatchSize:8 });
+  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:1,maxMatchSize:8 });
 
   function makeid(length){
     var result           = '';
