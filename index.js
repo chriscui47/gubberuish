@@ -304,6 +304,7 @@ io.on('connect', (socket) => {
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     try{
+      console.log(games);
         if(games[room]){
               if(games[room].users.length===0){
                 user.host=1;
