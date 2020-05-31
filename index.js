@@ -274,7 +274,7 @@ var curroomnum=11115;
       if(games[(curroom)].users.length>5){
         curroomnum+=1;
       }
-    
+    console.log(curroomnum);
 
     players.map(player=>
       {  
@@ -283,7 +283,6 @@ var curroomnum=11115;
         delete player["socket"];
         mm.leaveQueue(player);
         player["room"]=curroom;
-        console.log(JSON.stringify(player));
       }
     );
 
