@@ -71,9 +71,9 @@ function timer(roomname){
       games[roomname].roundCurrent+=1;
       games[roomname].users.map(user=>user.answered=0);
       if(games[roomname].roundCurrent>games[roomname].roundTotal){
-          io.to(roomname).emit('winner',"done");
           clearInterval(timerset);
       }
+
       changeWord(roomname,games[roomname].deck)
       //set all users back to not answered
     }
@@ -96,7 +96,7 @@ const removeUser = (id,room) => {
     console.log("deleteing user "+getUser(id).name+" from game lobby");
     games[room].users.splice(index,1);
     io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
-    console.log("current games are  "+games);
+    console.log("current games are");
     console.log(games);
 
 
@@ -112,7 +112,6 @@ const removeUser = (id,room) => {
       console.log("deleteing user in user list"+getUser(id).name);
       users.splice(index2,1);    
       io.to(room).emit('roomData', { users: games[room].users,game:games[room] });
-      console.log("current games are  "+games);
 
     }
 } catch (e) {
@@ -257,11 +256,11 @@ function getKey(player){
     }
     return result;
  }
- foo('11115',32,"Mix of all decks (recommended)",18);
- foo('11116',32,"Mix of all decks (recommended)",18);
- foo('11117',32,"Mix of all decks (recommended)",18);
- foo('11118',32,"Mix of all decks (recommended)",18);
- foo('11119',32,"Mix of all decks (recommended)",18);
+ foo('11115',26,"Mix of all decks (recommended)",18);
+ foo('11116',26,"Mix of all decks (recommended)",18);
+ foo('11117',26,"Mix of all decks (recommended)",18);
+ foo('11118',26,"Mix of all decks (recommended)",18);
+ foo('11119',26,"Mix of all decks (recommended)",18);
 var curroomnum=11115;
 
   function runGame(players) {
@@ -271,13 +270,11 @@ var curroomnum=11115;
     //once game starts, put players into match
     try{
       var curroom=JSON.stringify(curroomnum);
-      if(games[JSON.stringify(curroomnum)].users.length>5){
+      console.log(curroomnum);
+      if(games[(curroom)].users.length>5){
         curroomnum+=1;
       }
-    }
-    catch(e){
-      console.log(e.message);
-    }
+    
 
     players.map(player=>
       {  
@@ -293,6 +290,10 @@ var curroomnum=11115;
   //  console.log(getUsersInRoom(roomname));
     io.to(curroom).emit('roomData', { room: curroom, users: games[curroom].users,game:games[curroom] });
     io.to(curroom).emit('matchFound');
+    }
+    catch(e){
+      console.log(e.message);
+    }
   }
 
 
@@ -442,14 +443,18 @@ io.on('connect', (socket) => {
       console.log("couldnt get user");
     }
 try{
-   /* if(games[room]){
+    if(games[room]){
       if(games[room].users.length===0){
-        delete games[room];
-        console.log("Deleting game room! Games are:");
-        console.log(games);
+      //  delete games[room];
+       // console.log("Deleting game room! Games are:");
+       // console.log(games);
+       games[room].time=27;
+       games[room].roundCurrent=1;
+       games[room].roundEnd=-1;
+        clearInterval(room);
       }
     }
-    */console.log("left");
+    console.log("left");
   }
   catch(e){
     console.log("coudlnt delete game");
