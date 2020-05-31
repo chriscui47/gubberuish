@@ -270,7 +270,7 @@ var curroomnum=11115;
     //once game starts, put players into match
     try{
       var curroom=JSON.stringify(curroomnum);
-      console.log(curroomnum);
+      console.log(games[(curroom)].users.length);
       if(games[(curroom)].users.length>5){
         curroomnum+=1;
       }
