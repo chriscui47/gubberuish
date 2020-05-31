@@ -291,8 +291,8 @@ var curroomnum=11115;
     );
 
   //  console.log(getUsersInRoom(roomname));
-    io.to(roomname).emit('roomData', { room: curroom, users: games[curroom].users,game:games[curroom] });
-    io.to(roomname).emit('matchFound');
+    io.to(curroom).emit('roomData', { room: curroom, users: games[curroom].users,game:games[curroom] });
+    io.to(curroom).emit('matchFound');
   }
 
 
