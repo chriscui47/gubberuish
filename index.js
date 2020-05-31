@@ -283,6 +283,7 @@ var curroomnum=11115;
         delete player["socket"];
         mm.leaveQueue(player);
         player["room"]=curroom;
+        player["host"]=1;
       }
     );
 
@@ -450,7 +451,6 @@ try{
        games[room].time=27;
        games[room].roundCurrent=1;
        games[room].roundEnd=-1;
-        clearInterval(room);
       }
     }
     console.log("left");
