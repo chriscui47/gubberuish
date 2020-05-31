@@ -71,7 +71,8 @@ function timer(roomname){
       games[roomname].roundCurrent+=1;
       games[roomname].users.map(user=>user.answered=0);
       if(games[roomname].roundCurrent>games[roomname].roundTotal){
-          clearInterval(timerset);
+        io.to(roomname).emit('winner',"wattup");  
+        clearInterval(timerset);
       }
 
       changeWord(roomname,games[roomname].deck)
