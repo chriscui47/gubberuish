@@ -257,25 +257,41 @@ function getKey(player){
     }
     return result;
  }
+ foo('11115',32,"Mix of all decks (recommended)",18);
+ foo('11116',32,"Mix of all decks (recommended)",18);
+ foo('11117',32,"Mix of all decks (recommended)",18);
+ foo('11118',32,"Mix of all decks (recommended)",18);
+ foo('11119',32,"Mix of all decks (recommended)",18);
+var curroomnum=11115;
 
   function runGame(players) {
-    const roomname = makeid(5);
-    console.log("Game started with:"+players);
-    foo(roomname,32,"Mix of all decks (recommended)",18);
+   // const roomname = makeid(5);
+  //  console.log("Game started with:"+players);
+    //foo(roomname,32,"Mix of all decks (recommended)",18);
     //once game starts, put players into match
+    try{
+      var curroom=JSON.stringify(curroomnum);
+      if(games[JSON.stringify(curroomnum)].users.length>5){
+        curroomnum+=1;
+      }
+    }
+    catch(e){
+      console.log(e.message);
+    }
+
     players.map(player=>
       {  
-        games[roomname].users.push(player);
-        player.socket.join(roomname);
+        games[curroom].users.push(player);
+        player.socket.join(curroom);
         delete player["socket"];
         mm.leaveQueue(player);
-        player["room"]=roomname;
+        player["room"]=curroom;
         console.log(JSON.stringify(player));
       }
     );
 
   //  console.log(getUsersInRoom(roomname));
-    io.to(roomname).emit('roomData', { room: roomname, users: games[roomname].users,game:games[roomname] });
+    io.to(roomname).emit('roomData', { room: curroom, users: games[curroom].users,game:games[curroom] });
     io.to(roomname).emit('matchFound');
   }
 
@@ -425,13 +441,14 @@ io.on('connect', (socket) => {
       console.log("couldnt get user");
     }
 try{
-    if(games[room]){
+   /* if(games[room]){
       if(games[room].users.length===0){
         delete games[room];
         console.log("Deleting game room! Games are:");
         console.log(games);
       }
     }
+    */console.log("left");
   }
   catch(e){
     console.log("coudlnt delete game");
