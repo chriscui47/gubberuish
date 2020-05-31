@@ -246,7 +246,7 @@ catch(e){
 function getKey(player){
   return player.id;
 }
-  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:3,maxMatchSize:8 });
+  let mm = new FifoMatchmaker(runGame, getKey,{ checkInterval: 2000,minMatchSize:2,maxMatchSize:8 });
 
   function makeid(length){
     var result           = '';
@@ -261,7 +261,7 @@ function getKey(player){
   function runGame(players) {
     const roomname = makeid(5);
     console.log("Game started with:"+players);
-    foo(roomname,25,"Mix of all decks (recommended)",18);
+    foo(roomname,32,"Mix of all decks (recommended)",18);
     //once game starts, put players into match
     players.map(player=>
       {  
@@ -337,6 +337,8 @@ io.on('connect', (socket) => {
       return;
     }
     try{
+      console.log("The users in room "+ room);
+      console.log(JSON.stringify(games[room].users));
       if(!(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim())){
     io.to(room).emit('message', { user: user.name, text: message,answer:false });
       }
