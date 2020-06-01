@@ -306,7 +306,6 @@ io.on('connect', (socket) => {
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     try{
-      console.log(games);
         if(games[room]){
               if(games[room].users.length===0){
                 user.host=1;
@@ -350,8 +349,7 @@ io.on('connect', (socket) => {
 
   socket.on('sendMessage', (message,room, roundEnd,name,callback) => {    
     const user=getUser(socket.id);
-    console.log(games);
-
+    console.log(message+" sent from room" + room);
     if(!games[room]){
       return;
     }
@@ -426,14 +424,17 @@ io.on('connect', (socket) => {
       const user=getUser(socket.id); 
       room=user.room;
         if(user) {
-          mm.leaveQueue(user);
+          //if user is in queue, leave queue if he disconnects
+          /*
+            if(user.room.length<1){
+              mm.leaveQueue(user);
+            }*/
 
       //   setTimeout(function () {
           const del=removeUser(user.id,room);
         // }, 3500);
 
         socket.leave(room);
-        console.log("mm queeu is"+JSON.stringify(mm.queue));
         console.log("users list are ");
         console.log(JSON.stringify(users));
         io.to(room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
@@ -446,12 +447,15 @@ io.on('connect', (socket) => {
 try{
     if(games[room]){
       if(games[room].users.length===0){
-      //  delete games[room];
+
+        if( !(room=="11115"||room=="11116"||room=="11117"||room=="11118"||room=="11119")){
+            delete games[room];
+          }
        // console.log("Deleting game room! Games are:");
        // console.log(games);
-       games[room].time=27;
-       games[room].roundCurrent=1;
-       games[room].roundEnd=-1;
+        games[room].time=27;
+        games[room].roundCurrent=1;
+        games[room].roundEnd=-1;
       }
     }
     console.log("left");
