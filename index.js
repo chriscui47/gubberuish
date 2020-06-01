@@ -364,7 +364,7 @@ io.on('connect', (socket) => {
 
     }
     catch(e){
-      console.log(e);
+      console.log("yolo");
     }
 
     if(games[room].word.answer.toUpperCase().trim() === message.replace(/'/g, '').toUpperCase().trim() && games[room].roundEnd==0){
