@@ -456,6 +456,7 @@ try{
         games[room].time=27;
         games[room].roundCurrent=1;
         games[room].roundEnd=-1;
+        clearInterval(room);
       }
     }
     console.log("left");
