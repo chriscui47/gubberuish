@@ -57,7 +57,9 @@ function timer(roomname){
 
     //only update t ime if game is not over
     games[roomname].time-=1;
-    
+    if(games[roomname].users.length==0){
+      clearInterval(timerset);
+    }
 
     //if time is up, end the round and restart timer
     if(!games[roomname].roundEnd && games[roomname].time<=0){
@@ -456,7 +458,6 @@ try{
         games[room].time=27;
         games[room].roundCurrent=1;
         games[room].roundEnd=-1;
-        clearInterval(room);
       }
     }
     console.log("left");
