@@ -448,6 +448,7 @@ io.on('connect', (socket) => {
       }
     catch(e){
       console.log("couldnt get user");
+      console.log(e.message);
     }
 try{
     if(games[room]){
@@ -463,7 +464,6 @@ try{
         games[room].roundEnd=-1;
       }
     }
-    console.log("left");
   }
   catch(e){
     console.log("coudlnt delete game");
