@@ -93,7 +93,6 @@ const removeUser = (id,room) => {
 
   try {
     const index=games[room].users.findIndex(user=>user.id===id);
-    console(index);
     if(index !== -1) {
       console.log("deleteing user "+getUser(id).name+" from game lobby");
       games[room].users.splice(index,1);
