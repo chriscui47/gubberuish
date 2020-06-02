@@ -309,11 +309,12 @@ io.on('connect', (socket) => {
               if(games[room].users.length===0){
                 user.host=1;
               }
+        }else{
+          removeUser(user);
         }
         socket.join(user.room);
 
     }catch(e){
-        removeUser(user);
         return callback("Room doesnt exist");
         console.log(e.message);
 
