@@ -104,7 +104,7 @@ const removeUser = (id,room) => {
     }
     } catch (e) {
            console.log("couldnt delete from game users list")
-           console.log(e.error.message)
+           console.log(e.message);
       }
   try {
     const index2=users.findIndex((user) => user.room === room && user.id === id);
