@@ -92,6 +92,21 @@ function timer(roomname){
 const removeUser = (id,room) => {
 
   try {
+    const index=games[room].users.findIndex(user=>user.id===id);
+    console(index);
+    if(index !== -1) {
+      console.log("deleteing user "+getUser(id).name+" from game lobby");
+      games[room].users.splice(index,1);
+      io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
+      console.log("current games are");
+      console.log(games);
+  
+    }
+    } catch (e) {
+           console.log("couldnt delete from game users list")
+           console.log(e.error.message)
+      }
+  try {
     const index2=users.findIndex((user) => user.room === room && user.id === id);
     if(index2 !== -1) {
       console.log("deleteing user in user list"+getUser(id).name);
@@ -102,22 +117,7 @@ const removeUser = (id,room) => {
 } catch (e) {
       console.log("couldnt delete from all users list")
       }
- try {
-  const index=games[room].users.findIndex(user=>user.id===id);
-  console(index);
-  if(index !== -1) {
-    console.log("deleteing user "+getUser(id).name+" from game lobby");
-    games[room].users.splice(index,1);
-    io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
-    console.log("current games are");
-    console.log(games);
-
-  }
-  } catch (e) {
-         console.log("couldnt delete from game users list")
-         console.log(e.error.message)
-          return;
-    }
+ 
   
 
 }
