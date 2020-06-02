@@ -91,24 +91,6 @@ function timer(roomname){
 
 const removeUser = (id,room) => {
 
-  
- try {
-  const index=games[room].users.findIndex(user=>user.id===id);
-
-  if(index !== -1) {
-    console.log("deleteing user "+getUser(id).name+" from game lobby");
-    games[room].users.splice(index,1);
-    io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
-    console.log("current games are");
-    console.log(games);
-
-
-  }
-  } catch (e) {
-         console.log("couldnt delete from game users list")
-          return;
-    }
-  
   try {
     const index2=users.findIndex((user) => user.room === room && user.id === id);
     if(index2 !== -1) {
@@ -119,8 +101,23 @@ const removeUser = (id,room) => {
     }
 } catch (e) {
       console.log("couldnt delete from all users list")
-      return;
       }
+ try {
+  const index=games[room].users.findIndex(user=>user.id===id);
+
+  if(index !== -1) {
+    console.log("deleteing user "+getUser(id).name+" from game lobby");
+    games[room].users.splice(index,1);
+    io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
+    console.log("current games are");
+    console.log(games);
+
+  }
+  } catch (e) {
+         console.log("couldnt delete from game users list")
+          return;
+    }
+  
 
 }
 
@@ -316,6 +313,7 @@ io.on('connect', (socket) => {
         socket.join(user.room);
 
     }catch(e){
+        removeUser(user);
         return callback("Room doesnt exist");
         console.log(e.message);
 
