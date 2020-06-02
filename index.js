@@ -115,6 +115,7 @@ const removeUser = (id,room) => {
   }
   } catch (e) {
          console.log("couldnt delete from game users list")
+         console.log(e.error.message)
           return;
     }
   
@@ -315,6 +316,7 @@ io.on('connect', (socket) => {
 
     }catch(e){
        removeUser(user.id,JSON.stringify(curroomnum));
+       socket.leave(JSON.stringify(curroomnum));
         return callback("Room doesnt exist");
         console.log(e.message);
 
