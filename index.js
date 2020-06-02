@@ -315,8 +315,10 @@ io.on('connect', (socket) => {
         socket.join(user.room);
 
     }catch(e){
+      /*
        removeUser(user.id,JSON.stringify(curroomnum));
        socket.leave(JSON.stringify(curroomnum));
+       */
         return callback("Room doesnt exist");
         console.log(e.message);
 
