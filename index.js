@@ -98,7 +98,6 @@ const removeUser = (id,room) => {
       games[room].users.splice(index,1);
       io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
       console.log("current games are");
-      console.log(games);
   
     }
     } catch (e) {
@@ -458,6 +457,8 @@ try{
           }
        // console.log("Deleting game room! Games are:");
        // console.log(games);
+       console.log(games);
+       console.log(" ");
         games[room].time=27;
         games[room].roundCurrent=1;
         games[room].roundEnd=-1;
