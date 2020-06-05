@@ -336,7 +336,7 @@ io.on('connect', (socket) => {
     const { error, user } = addUser2({ id: socket.id, name, socket });
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
-    tryToStartGame(user);
+    runGame(user);
     }
     catch(e){
       console.log(e.message);
