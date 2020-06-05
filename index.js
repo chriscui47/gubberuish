@@ -262,7 +262,7 @@ function getKey(player){
  foo('11119',26,"Mix of all decks (recommended)",18);
 var curroomnum=11115;
 
-  function runGame(players) {
+  function runGame(player) {
    // const roomname = makeid(5);
   //  console.log("Game started with:"+players);
     //foo(roomname,32,"Mix of all decks (recommended)",18);
@@ -275,16 +275,12 @@ var curroomnum=11115;
       }
     console.log(curroomnum);
 
-    players.map(player=>
-      {  
         games[curroom].users.push(player);
         player.socket.join(curroom);
         delete player["socket"];
-        mm.leaveQueue(player);
         player["room"]=curroom;
         player["host"]=1;
-      }
-    );
+
 
   //  console.log(getUsersInRoom(roomname));
     io.to(curroom).emit('roomData', { room: curroom, users: games[curroom].users,game:games[curroom] });
@@ -340,7 +336,7 @@ io.on('connect', (socket) => {
     const { error, user } = addUser2({ id: socket.id, name, socket });
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
-    mm.push(user);
+    tryToStartGame(user);s
     }
     catch(e){
       console.log(e.message);
