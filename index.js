@@ -349,7 +349,7 @@ io.on('connect', (socket) => {
   socket.on('sendMessage', (message,room, roundEnd,name,callback) => {    
     const user=getUser(socket.id);
     console.log(message+" sent from room" + room);
-    if(!games[room]){
+    if(!games[room] || !user){
       return;
     }
     try{
@@ -358,11 +358,6 @@ io.on('connect', (socket) => {
       if(!(games[room].word.answer.toUpperCase().trim() === message.toUpperCase().trim())){
     io.to(room).emit('message', { user: user.name, text: message,answer:false });
       }
-
-    }
-    catch(e){
-      console.log("yolo");
-    }
 
     if(games[room].word.answer.toUpperCase().trim() === message.replace(/'/g, '').toUpperCase().trim() && games[room].roundEnd==0){
       io.to(room).emit('message', { user: 'admin', text: `${name} got the answer!`,answer:true });
@@ -377,7 +372,10 @@ io.on('connect', (socket) => {
       games[room].roundEnd=1;
       games[room].time=7;
     }
-
+  }
+  catch(e){
+    console.log(e.message);
+  }
     callback();
   });
 
