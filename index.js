@@ -319,7 +319,7 @@ io.on('connect', (socket) => {
     }
     try{
     games[room].users.push(user);
-    
+    console.log("f");
     socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
