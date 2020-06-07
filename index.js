@@ -275,11 +275,9 @@ var curroomnum=11115;
       }
     console.log(curroomnum);
         if(games[curroom].users.length==0){
-          timer(room);
-          games[room].roundEnd=0;
+          timer(curroom);
+          games[curroom].roundEnd=0;
         }
-
-
 
         games[curroom].users.push(player);
         player.socket.join(curroom);
