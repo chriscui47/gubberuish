@@ -274,12 +274,13 @@ var curroomnum=11115;
         curroomnum+=1;
       }
     console.log(curroomnum);
-        if(games[curroom].users.length==0){
+        games[curroom].users.push(player);
+        
+        if(games[curroom].users.length==1){
           timer(curroom);
           games[curroom].roundEnd=0;
         }
 
-        games[curroom].users.push(player);
         player.socket.join(curroom);
         delete player["socket"];
         player["room"]=curroom;
@@ -455,12 +456,19 @@ try{
             return;
           }
        // console.log("Deleting game room! Games are:");
-       // console.log(games);
+       /* console.log(games);
        console.log(games);
        console.log(" ");
         games[room].time=27;
         games[room].roundCurrent=1;
         games[room].roundEnd=-1;
+        */
+        delete games[room];
+        
+      foo(room,26,"Mix of all decks (recommended)",18);
+
+
+
       }
     }
   }
