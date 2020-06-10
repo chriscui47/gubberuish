@@ -452,6 +452,7 @@ try{
 
         if( !(room=="11115"||room=="11116"||room=="11117"||room=="11118"||room=="11119")){
             delete games[room];
+            return;
           }
        // console.log("Deleting game room! Games are:");
        // console.log(games);
