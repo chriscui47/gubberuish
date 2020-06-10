@@ -328,7 +328,7 @@ io.on('connect', (socket) => {
 
     io.to(user.room).emit('roomData', { room: user.room, users: games[room].users,game:games[room] });
     }catch(e){
-      return callback("Room doesnt exist");
+      return callback("Room doesnt exists");
       console.log(e.message);
     }
 
