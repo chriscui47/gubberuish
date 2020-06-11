@@ -65,6 +65,7 @@ function timer(roomname){
     if(!games[roomname].roundEnd && games[roomname].time<=0){
       games[roomname].time=9;
       games[roomname].roundEnd=1;
+      console.log("round over in room"+roomname);
     }
     //answer was~! Then restart timer and the round
     if(games[roomname].roundEnd && games[roomname].time <=0){
@@ -94,7 +95,7 @@ const removeUser = (id,room) => {
   try {
     const index=games[room].users.findIndex(user=>user.id===id);
     if(index !== -1) {
-      console.log("deleteing user "+getUser(id).name+" from game lobby");
+      console.log("deleteing user "+getUser(id).name+" from game lobby"+ room);
       games[room].users.splice(index,1);
       io.to(room).emit('roomData', {users: games[room].users,game:games[room] });
       console.log("current games are");
