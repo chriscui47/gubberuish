@@ -34,7 +34,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+var playercount=0;
 const router = require('./router');
 const {users} = require('./users');
 
@@ -303,6 +303,8 @@ var curroomnum=11115;
 io.on('connect', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
+    playercount++;
+    console.log("playercount is "+playercount);
     if(error) return callback(error);
     //if its first user in lobby, make him HOST!
     try{

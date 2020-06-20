@@ -10,8 +10,7 @@ const wakeUpDyno = (url, interval = 25, callback) => {
             fetch(url).then(() => console.log(`Fetching ${url}.`)); 
         }
         catch (err) { // catch fetch errors
-            console.log(`Error fetching ${url}: ${err.message} 
-            Will try again in ${interval} minutes...`);
+       console.log("");
         }
         finally {
 
@@ -19,7 +18,8 @@ const wakeUpDyno = (url, interval = 25, callback) => {
                 callback(); // execute callback, if passed
             }
             catch (e) { // catch callback error
-                callback ? console.log("Callback failed: ", e.message) : null;
+                console.log("");
+
             }
             finally {
                 // do it all again
