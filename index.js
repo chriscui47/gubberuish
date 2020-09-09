@@ -204,6 +204,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   return true;
 
 }
+//YEEEEEEEEEEEEET
 //foo creates game
   var foo = function(room,gameLength,deck,rounds) {
       //try to start the gamefv
