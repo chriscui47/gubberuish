@@ -89,9 +89,9 @@ function timer(roomname){
 
 
 }
+//this is new test
 
 const removeUser = (id,room) => {
-
   try {
     const index=games[room].users.findIndex(user=>user.id===id);
     if(index !== -1) {
