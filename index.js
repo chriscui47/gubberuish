@@ -221,7 +221,7 @@ function tryToStartGame(room,gameLength,deck,rounds){
   
   app.post('/create', function(req, res) {
   //  body= JSON.parse(req);
-
+    console.log("BITCH");
 try{
       var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/'];
       var origin = req.headers.origin;
@@ -489,12 +489,12 @@ try{
   
   )
 });
-/*
+
 server.listen(process.env.PORT || 5000, () => 
 
 wakeUpDyno(DYNO_URL) // will start once server starts
 
 );
-*/
+
 
 module.exports=games;
