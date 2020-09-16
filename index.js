@@ -489,12 +489,12 @@ try{
   
   )
 });
-
+/*
 server.listen(process.env.PORT || 5000, () => 
 
 wakeUpDyno(DYNO_URL) // will start once server starts
 
 );
-
+*/
 
 module.exports=games;
