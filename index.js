@@ -233,9 +233,11 @@ try{
       res.header('Access-Control-Allow-Credentials', true);
         let body=(req.body);  
         (foo(body.room,body.gameLength.substring(0,2),body.deck,body.rounds.substring(0,2)));
+        console.log("here");
         res.send({data:true});
 }
 catch(e){
+  console.log("error");
     console.log(e.message);
 }
 
