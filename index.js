@@ -19,7 +19,6 @@ app.use(require('prerender-node').set('prerenderToken', 'G9I4sHcvwHe0Adk5VIz5'))
 app.use(function(req, res, next) {
   var allowedOrigins = ['http://localhost:5000', 'http://localhost:3000', 'https://playgibberish.com/', 'https://gibb47.herokuapp.com/','https://playgibberish.com/lobby','https://gibberishly.netlify.app/','https://playgibberish.com'];
   var origin = req.headers.origin;
-  console.log(origin);
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);
   }
@@ -29,7 +28,6 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', 'Content-Type, application/json');
   res.header('Access-Control-Allow-Credentials', true);
 
-  return next();
 });
 
 app.use(bodyParser.json());
