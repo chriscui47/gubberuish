@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var playercount=0;
 const router = require('./router');
 const {users} = require('./users');
-
+const hello ="grrggr";
 
 const server = http.createServer(app);
 //const io = socketio(server);
